@@ -63,7 +63,13 @@ class Scraper(Cmd):
         if self.content is not None:
             results = self.content.findAll(text=re.compile(text))
             print()
-            print('\n'.join([str(result.parent) for result in results]))
+            
+            for result in results:
+                print(json.dumps({
+                    'name': result.parent.name,
+                    'text': result,
+                    'attributes': result.parent.attrs
+                }, indent=2), '\n')
         else:
             print(' Content is not loaded, please fetch URL or load stored HTML first!')
 
@@ -81,7 +87,13 @@ class Scraper(Cmd):
             results = self.content.findAll(tag, params)
             
             print()
-            print('\n'.join([result.text for result in results]))
+            if tag == 'a':
+                try:
+                    print('\n'.join(['[' + result.text + ']' + ' <' + result['href'] + '>' for result in results]))
+                except:
+                    print('\n'.join([result.text for result in results]))
+            else:
+                print('\n'.join([result.text for result in results]))
             print('\n Total: %d entries' % len(results))
         else:
             print(' Content is not loaded, please fetch URL or load stored HTML first!')
