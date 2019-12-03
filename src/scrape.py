@@ -18,7 +18,8 @@ class Scraper(Cmd):
     ignored_tags = ['script', 'style']
 
     def do_fetch(self, url):
-        '''Makes HTTP GET request to the given URL'''
+        '''\n Description: make HTTP GET request to the given URL\n     Example: fetch https://www.google.com'''
+        
         if url == '':
             print(' Please provide a URL!')
             return
@@ -38,12 +39,15 @@ class Scraper(Cmd):
 
     
     def do_html(self, no_arg):
+        '''\n Description: print HTML source code\n     Example: html'''
         if self.content is not None:
+            print()
             print(self.content.prettify())
         else:
             print(' Content is not loaded, please fetch URL first!')
     
     def do_text(self, no_arg):
+        '''\n Description: extracts text from HTML and prints it to console\n     Example: text'''
         if self.content is not None:
             for tag in self.content.recursiveChildGenerator():
                 if tag.name is None and not tag.isspace() and tag.parent.name not in self.ignored_tags and tag != 'html':
@@ -60,6 +64,7 @@ class Scraper(Cmd):
             print(' Content is not loaded, please fetch URL or load stored HTML first!')
 
     def do_search(self, text):
+    
         if self.content is not None:
             results = self.content.findAll(text=re.compile(text))
             print()
